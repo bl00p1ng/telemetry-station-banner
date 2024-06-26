@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #0a192f;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .graph {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            animation: moveGraph 20s linear infinite;
+        }
+        @keyframes moveGraph {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .line {
+            fill: none;
+            stroke: #64ffda;
+            stroke-width: 2;
+        }
+        .area {
+            fill: url(#gradient);
+        }
+        .app-name {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 28px;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 10;
+            text-shadow: 0 0 10px rgba(100, 255, 218, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg class="graph" preserveAspectRatio="none" viewBox="0 0 1000 300">
+            <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#64ffda;stop-opacity:0.5" />
+                    <stop offset="100%" style="stop-color:#64ffda;stop-opacity:0" />
+                </linearGradient>
+            </defs>
+            <path class="line" d="M0,150 Q250,50 500,150 T1000,150" />
+            <path class="area" d="M0,150 Q250,50 500,150 T1000,150 V300 H0 Z" />
+        </svg>
+        <div class="app-name">Telemetry Station</div>
+    </div>
+    <script>
+        function updatePath() {
+            const svg = document.querySelector('svg');
+            const line = svg.querySelector('.line');
+            const area = svg.querySelector('.area');
+            const width = 1000;
+            const height = 300;
+            let path = `M0,${height/2}`;
+            
+            for (let x = 0; x <= width; x += 50) {
+                const y = Math.sin(x/50) * 50 + height/2;
+                path += ` L${x},${y}`;
+            }
+            
+            line.setAttribute('d', path);
+            area.setAttribute('d', path + ` V${height} H0 Z`);
+        }
+        
+        updatePath();
+        setInterval(updatePath, 100);
+    </script>
+</body>
+</html>
